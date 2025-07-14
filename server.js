@@ -15,6 +15,9 @@ app.use(express.static(path.join(__dirname, 'frontend')));
 // Library routes
 app.use('/api/library', require('./routes/library'));
 
+// Movie routes
+app.use('/api/movies', require('./routes/movies'));
+
 // Search proxy route
 app.get('/api/search', checkAuth, async (req, res) => {
     try {
@@ -73,7 +76,7 @@ app.get('/api/search', checkAuth, async (req, res) => {
 
 // Default route serves the frontend
 app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'frontend', 'index.html'));
+    res.sendFile(path.join(__dirname, 'frontend', 'dashboard.html'));
 });
 
 // Catch-all route for client-side routing
