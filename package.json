@@ -1,0 +1,26 @@
+{
+  "name": "PopCorn",
+  "version": "1.0.0",
+  "description": "A web application to track movies and TV shows using Supabase",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "nodemon server.js",
+    "build:css": "tailwindcss -i ./frontend/css/styles.css -o ./frontend/css/output.css --watch",
+    "dev:all": "concurrently \"npm run dev\" \"npm run build:css\""
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.39.0",
+    "@tailwindcss/cli": "^4.1.11",
+    "cors": "^2.8.5",
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2"
+  },
+  "devDependencies": {
+    "autoprefixer": "^10.4.16",
+    "concurrently": "^8.2.2",
+    "nodemon": "^3.0.2",
+    "postcss": "^8.4.32",
+    "tailwindcss": "^3.4.0"
+  }
+}

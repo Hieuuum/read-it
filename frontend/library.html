@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PopCorn - My Library</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body class="bg-gray-900 text-white min-h-screen">
+    <!-- Header -->
+    <header class="bg-gray-800 shadow-lg">
+        <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+            <div class="flex justify-between items-center">
+                <h1 class="text-2xl font-bold">PopCorn</h1>
+                <div class="flex space-x-4">
+                    <a href="/dashboard.html" class="text-gray-300 hover:text-white px-3 py-2 rounded-md">Search</a>
+                    <button id="logoutBtn" class="text-gray-300 hover:text-white px-3 py-2 rounded-md">Logout</button>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Main Content -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <h2 class="text-3xl font-bold mb-8">My Library</h2>
+
+        <!-- Loading State -->
+        <div id="loadingState" class="hidden text-center py-8">
+            <div class="inline-block animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-500"></div>
+        </div>
+
+        <!-- Library Grid -->
+        <div id="library-container" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+            <!-- Library items will be dynamically inserted here -->
+        </div>
+
+        <!-- Error Message Area -->
+        <div id="errorMessage" class="hidden text-red-500 text-center mt-4"></div>
+
+        <!-- Empty State -->
+        <div id="emptyState" class="hidden text-center py-12">
+            <p class="text-gray-400 text-lg">Your library is empty. Start by searching for media to add!</p>
+            <a href="/dashboard.html" class="inline-block mt-4 px-6 py-2 bg-blue-600 hover:bg-blue-700 rounded-lg font-medium">
+                Search Media
+            </a>
+        </div>
+    </main>
+
+    <script src="/js/main.js" type="module"></script>
+    <script src="/js/library.js" type="module"></script>
+</body>
+</html> 
