@@ -1,6 +1,6 @@
 // Initialize Supabase client
-const supabaseUrl = 'https://idoosdjndaxgdmkxjcxt.supabase.co';
-const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imlkb29zZGpuZGF4Z2Rta3hqY3h0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTE4NDgwNTcsImV4cCI6MjA2NzQyNDA1N30.FeJo8D8ytmLlYaagNuQHaz12IlfyTwNGEHGItYJzYFo';
+const supabaseUrl = process.env.SUPABASE_URL;
+const supabaseKey = process.env.SUPABASE_ANON_KEY;
 const supabaseClient = supabase.createClient(supabaseUrl, supabaseKey, {
     auth: {
         persistSession: true,
