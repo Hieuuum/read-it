@@ -1,10 +1,9 @@
 const express = require('express');
 const router = express.Router();
 const { supabase } = require('../supabaseClient');
-const checkAuth = require('../middleware/auth');
 
 // Get user's interactions with a movie
-router.get('/:movieId/interactions', checkAuth, async (req, res) => {
+router.get('/:movieId/interactions', async (req, res) => {
     try {
         const { movieId } = req.params;
         const userId = req.user.id;
@@ -36,7 +35,7 @@ router.get('/:movieId/interactions', checkAuth, async (req, res) => {
 });
 
 // Update user's interaction with a movie
-router.post('/:movieId/interactions', checkAuth, async (req, res) => {
+router.post('/:movieId/interactions', async (req, res) => {
     try {
         const { movieId } = req.params;
         const { type, value } = req.body;

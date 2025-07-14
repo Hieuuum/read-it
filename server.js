@@ -2,7 +2,7 @@ require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const path = require('path');
-const checkAuth = require('./middleware/auth');
+const { checkApiAuth, checkPageAuth } = require('./middleware/auth');
 
 // Initialize Express app
 const app = express();
@@ -10,16 +10,30 @@ const app = express();
 // Middleware
 app.use(cors());
 app.use(express.json());
+
+// Serve static files from frontend directory
 app.use(express.static(path.join(__dirname, 'frontend')));
 
-// Library routes
-app.use('/api/library', require('./routes/library'));
+// Public routes (no auth required)
+app.get('/index.html', (req, res) => {
+  res.sendFile(path.join(__dirname, 'frontend', 'index.html'));
+});
 
-// Movie routes
-app.use('/api/movies', require('./routes/movies'));
+// Protected page routes
+app.get('/dashboard.html', checkPageAuth, (req, res) => {
+  res.sendFile(path.join(__dirname, 'frontend', 'dashboard.html'));
+});
+
+app.get('/library.html', checkPageAuth, (req, res) => {
+  res.sendFile(path.join(__dirname, 'frontend', 'library.html'));
+});
+
+// Protected API routes
+app.use('/api/library', checkApiAuth, require('./routes/library'));
+app.use('/api/movies', checkApiAuth, require('./routes/movies'));
 
 // Search proxy route
-app.get('/api/search', checkAuth, async (req, res) => {
+app.get('/api/search', checkApiAuth, async (req, res) => {
     try {
         const query = req.query.query;
         if (!query) {
@@ -74,9 +88,15 @@ app.get('/api/search', checkAuth, async (req, res) => {
     }
 });
 
-// Default route serves the frontend
+// Default route handler
 app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'frontend', 'dashboard.html'));
+    // Check if user is authenticated
+    const { data: { session } } = supabase.auth.getSession();
+    if (session) {
+        res.redirect('/dashboard.html');
+    } else {
+        res.redirect('/index.html');
+    }
 });
 
 // Catch-all route for client-side routing
@@ -85,8 +105,8 @@ app.get('*', (req, res) => {
     if (req.url.startsWith('/api')) {
         return res.status(404).json({ error: 'Not found' });
     }
-    // Serve index.html for all other routes
-    res.sendFile(path.join(__dirname, 'frontend', 'index.html'));
+    // Redirect to login for all other routes
+    res.redirect('/index.html');
 });
 
 // Start server

@@ -1,10 +1,6 @@
 const express = require('express');
 const router = express.Router();
 const supabase = require('../supabaseClient');
-const checkAuth = require('../middleware/auth');
-
-// Apply auth middleware to all routes
-router.use(checkAuth);
 
 // Get all media items for the authenticated user
 router.get('/', async (req, res) => {
