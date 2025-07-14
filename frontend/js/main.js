@@ -1,7 +1,7 @@
 // Initialize Supabase client
 const supabaseUrl = process.env.SUPABASE_URL;
 const supabaseKey = process.env.SUPABASE_ANON_KEY;
-const supabaseClient = supabase.createClient(supabaseUrl, supabaseKey, {
+export const supabaseClient = supabase.createClient(supabaseUrl, supabaseKey, {
     auth: {
         persistSession: true,
         autoRefreshToken: true,
@@ -16,7 +16,7 @@ const supabaseClient = supabase.createClient(supabaseUrl, supabaseKey, {
  * Checks if a user session exists. Redirects to the login page if not.
  * @returns {Promise<object|null>} The session object or null if not authenticated.
  */
-async function checkAndRedirect() {
+export async function checkAndRedirect() {
     try {
         const { data: { session }, error } = await supabaseClient.auth.getSession();
         if (error) throw error;
@@ -45,7 +45,7 @@ async function checkAndRedirect() {
 /**
  * Handles user logout.
  */
-async function handleLogout() {
+export async function handleLogout() {
     try {
         const { error } = await supabaseClient.auth.signOut();
         if (error) throw error;
@@ -61,7 +61,7 @@ async function handleLogout() {
  * @param {string} message The error message to display.
  * @param {string} elementId The ID of the HTML element to show the message in.
  */
-function showError(message, elementId = 'errorMessage') {
+export function showError(message, elementId = 'errorMessage') {
     const errorElement = document.getElementById(elementId);
     if (errorElement) {
         errorElement.textContent = message;

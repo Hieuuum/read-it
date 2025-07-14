@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PopCorn - My Library</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="css/output.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body class="bg-gray-900 text-white min-h-screen">
@@ -12,10 +12,11 @@
     <header class="bg-gray-800 shadow-lg">
         <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
             <div class="flex justify-between items-center">
-                <h1 class="text-2xl font-bold">PopCorn</h1>
-                <div class="flex space-x-4">
-                    <a href="/dashboard.html" class="text-gray-300 hover:text-white px-3 py-2 rounded-md">Search</a>
-                    <button id="logoutBtn" class="text-gray-300 hover:text-white px-3 py-2 rounded-md">Logout</button>
+                <a href="/dashboard.html" class="text-2xl font-bold">PopCorn</a>
+                <div id="navLinks" class="flex space-x-4">
+                    <div id="authLinks" class="flex space-x-4">
+                        <!-- Navigation links will be dynamically inserted here -->
+                    </div>
                 </div>
             </div>
         </nav>
@@ -48,6 +49,7 @@
     </main>
 
     <script src="/js/main.js" type="module"></script>
+    <script src="/js/navbar.js" type="module"></script>
     <script src="/js/library.js" type="module"></script>
 </body>
 </html> 
