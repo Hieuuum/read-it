@@ -44,66 +44,8 @@
         </div>
 
         <!-- Movie Grid -->
-        <div id="movie-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6">
-            <!-- Movies will be dynamically inserted here -->
-        </div>
-
-        <!-- Movie Modal -->
-        <div id="movieModal" class="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center hidden z-50">
-            <div class="bg-gray-800 rounded-lg max-w-4xl w-full mx-4 overflow-hidden">
-                <div class="flex">
-                    <!-- Left: Poster -->
-                    <div class="w-1/3">
-                        <img id="modalPoster" class="w-full h-full object-cover" src="" alt="">
-                    </div>
-                    
-                    <!-- Middle: Content -->
-                    <div class="w-2/3 p-6">
-                        <div class="flex justify-between items-start mb-4">
-                            <h2 id="modalTitle" class="text-2xl font-bold"></h2>
-                            <button id="closeModal" class="text-gray-400 hover:text-white">
-                                <i class="fas fa-times"></i>
-                            </button>
-                        </div>
-                        
-                        <p id="modalReleaseDate" class="text-gray-400 mb-4"></p>
-                        <p id="modalOverview" class="text-gray-300 mb-6"></p>
-                        
-                        <!-- Interaction Buttons -->
-                        <div class="space-y-4">
-                            <!-- Rating -->
-                            <div class="flex items-center space-x-2">
-                                <span class="text-gray-400">Rating:</span>
-                                <div id="starRating" class="flex space-x-1">
-                                    <i class="far fa-star text-yellow-400 cursor-pointer"></i>
-                                    <i class="far fa-star text-yellow-400 cursor-pointer"></i>
-                                    <i class="far fa-star text-yellow-400 cursor-pointer"></i>
-                                    <i class="far fa-star text-yellow-400 cursor-pointer"></i>
-                                    <i class="far fa-star text-yellow-400 cursor-pointer"></i>
-                                </div>
-                            </div>
-                            
-                            <!-- Action Buttons -->
-                            <div class="flex space-x-4">
-                                <button id="watchedBtn" class="flex items-center space-x-2 px-4 py-2 rounded-md bg-gray-700 hover:bg-gray-600">
-                                    <i class="far fa-eye"></i>
-                                    <span>Mark as Watched</span>
-                                </button>
-                                
-                                <button id="watchlistBtn" class="flex items-center space-x-2 px-4 py-2 rounded-md bg-gray-700 hover:bg-gray-600">
-                                    <i class="far fa-bookmark"></i>
-                                    <span>Add to Watchlist</span>
-                                </button>
-                                
-                                <button id="likeBtn" class="flex items-center space-x-2 px-4 py-2 rounded-md bg-gray-700 hover:bg-gray-600">
-                                    <i class="far fa-heart"></i>
-                                    <span>Like</span>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+        <div id="movie-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+            <!-- Movie cards will be dynamically inserted here -->
         </div>
 
         <!-- Error Message Area -->
