@@ -3,10 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PopCorn - Login</title>
+    <title>PopCorn - Authentication</title>
     <link href="css/output.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="/js/env.generated.js"></script>
+    <style>
+        .btn-mode {
+            @apply font-medium px-4 py-2 rounded-md transition-all duration-200;
+        }
+        .btn-mode.active {
+            @apply bg-blue-600 text-white;
+        }
+        .btn-mode.inactive {
+            @apply text-gray-400 hover:text-white;
+        }
+    </style>
 </head>
 <body class="bg-gray-900 text-white min-h-screen">
     <!-- Header -->
@@ -14,54 +25,160 @@
         <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
             <div class="flex justify-between items-center">
                 <a href="/" class="text-2xl font-bold">PopCorn</a>
-                <div id="navLinks" class="flex space-x-4">
-                    <div id="authLinks" class="flex space-x-4">
-                        <!-- Navigation links will be dynamically inserted here -->
-                    </div>
-                </div>
             </div>
         </nav>
     </header>
 
     <div class="min-h-screen flex items-center justify-center">
         <div class="w-full max-w-md p-8 space-y-6 bg-gray-800 rounded-lg shadow-xl">
-            <h1 class="text-3xl font-bold text-center">PopCorn</h1>
+            <h1 class="text-3xl font-bold text-center">Welcome to PopCorn</h1>
             
+            <!-- Mode Selection -->
+            <div class="flex justify-center space-x-4 mb-6">
+                <button id="login-mode-btn" class="btn-mode active">Login</button>
+                <button id="signup-mode-btn" class="btn-mode inactive">Sign Up</button>
+            </div>
+
             <!-- Auth Form -->
-            <div id="authForm" class="space-y-4">
-                <div class="flex justify-center space-x-4 mb-6">
-                    <button id="showLoginBtn" class="text-white hover:text-blue-400 transition-colors duration-200 font-medium">Login</button>
-                    <span class="text-gray-500">|</span>
-                    <button id="showSignupBtn" class="text-blue-500 hover:text-blue-400 transition-colors duration-200 font-medium">Sign Up</button>
+            <form id="auth-form" class="space-y-4">
+                <div>
+                    <label for="email" class="block text-sm font-medium text-gray-300">Email</label>
+                    <input type="email" id="email" name="email" required
+                        class="mt-1 block w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500">
                 </div>
 
-                <form id="authFormElement" class="space-y-4">
-                    <div>
-                        <label for="email" class="block text-sm font-medium text-gray-300">Email</label>
-                        <input type="email" id="email" name="email" required
-                            class="mt-1 block w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                    </div>
+                <div>
+                    <label for="password" class="block text-sm font-medium text-gray-300">Password</label>
+                    <input type="password" id="password" name="password" required
+                        class="mt-1 block w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                </div>
 
-                    <div>
-                        <label for="password" class="block text-sm font-medium text-gray-300">Password</label>
-                        <input type="password" id="password" name="password" required
-                            class="mt-1 block w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                    </div>
+                <button id="submit-btn" type="submit"
+                    class="w-full py-2 px-4 bg-blue-600 hover:bg-blue-700 rounded-md font-medium focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-gray-800 disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-200">
+                    <span id="submit-btn-text">Login</span>
+                    <span id="loading-spinner" class="hidden inline-block animate-spin h-5 w-5 border-t-2 border-white rounded-full"></span>
+                </button>
+            </form>
 
-                    <button type="submit"
-                        class="w-full py-2 px-4 bg-blue-600 hover:bg-blue-700 rounded-md font-medium focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-gray-800 disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-200">
-                        <span id="submitButtonText">Login</span>
-                        <span id="loadingSpinner" class="hidden inline-block animate-spin h-5 w-5 border-t-2 border-white rounded-full"></span>
-                    </button>
-                </form>
-
-                <!-- Error Message Area -->
-                <div id="errorMessage" class="hidden text-red-500 text-sm text-center mt-4"></div>
-            </div>
+            <!-- Error Message -->
+            <p id="error-message" class="hidden text-red-500 text-sm text-center"></p>
         </div>
     </div>
 
-    <script src="/js/main.js" type="module"></script>
-    <script src="/js/navbar.js" type="module"></script>
+    <script type="module">
+        import { supabaseClient } from '/js/main.js';
+
+        // State management
+        let currentMode = 'login';
+        let isLoading = false;
+
+        // Get DOM elements
+        const loginModeBtn = document.getElementById('login-mode-btn');
+        const signupModeBtn = document.getElementById('signup-mode-btn');
+        const authForm = document.getElementById('auth-form');
+        const submitBtn = document.getElementById('submit-btn');
+        const submitBtnText = document.getElementById('submit-btn-text');
+        const loadingSpinner = document.getElementById('loading-spinner');
+        const errorMessage = document.getElementById('error-message');
+
+        // Function to show/hide loading state
+        function setLoading(loading) {
+            isLoading = loading;
+            submitBtn.disabled = loading;
+            submitBtnText.classList.toggle('hidden', loading);
+            loadingSpinner.classList.toggle('hidden', !loading);
+        }
+
+        // Function to show error message
+        function showError(message) {
+            errorMessage.textContent = message;
+            errorMessage.classList.remove('hidden');
+            setTimeout(() => {
+                errorMessage.classList.add('hidden');
+            }, 5000);
+        }
+
+        // Function to set the current mode
+        function setMode(mode) {
+            currentMode = mode;
+            
+            // Update button styles
+            if (mode === 'login') {
+                loginModeBtn.classList.remove('inactive');
+                loginModeBtn.classList.add('active');
+                signupModeBtn.classList.remove('active');
+                signupModeBtn.classList.add('inactive');
+                submitBtnText.textContent = 'Login';
+            } else {
+                signupModeBtn.classList.remove('inactive');
+                signupModeBtn.classList.add('active');
+                loginModeBtn.classList.remove('active');
+                loginModeBtn.classList.add('inactive');
+                submitBtnText.textContent = 'Sign Up';
+            }
+        }
+
+        // Add event listeners for mode switching
+        loginModeBtn.addEventListener('click', () => setMode('login'));
+        signupModeBtn.addEventListener('click', () => setMode('signup'));
+
+        // Handle form submission
+        authForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            if (isLoading) return;
+
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+
+            setLoading(true);
+
+            try {
+                let result;
+                if (currentMode === 'login') {
+                    result = await supabaseClient.auth.signInWithPassword({ email, password });
+                } else {
+                    result = await supabaseClient.auth.signUp({
+                        email,
+                        password,
+                        options: {
+                            emailRedirectTo: `${window.location.origin}/dashboard.html`,
+                            data: { email }
+                        }
+                    });
+                }
+
+                if (result.error) throw result.error;
+
+                if (result.data.session) {
+                    window.location.href = '/dashboard.html';
+                } else if (currentMode === 'signup' && result.data.user) {
+                    showError('Please check your email to confirm your account. Check your spam folder if you don\'t see it.');
+                } else {
+                    throw new Error('Unexpected response from server');
+                }
+            } catch (error) {
+                console.error('Auth error:', error);
+                showError(error.message || 'An error occurred during authentication');
+            } finally {
+                setLoading(false);
+            }
+        });
+
+        // Set initial mode
+        setMode('login');
+
+        // Check for auth callback
+        const hashFragment = window.location.hash;
+        if (hashFragment && (hashFragment.includes('access_token') || hashFragment.includes('error'))) {
+            window.history.replaceState(null, '', window.location.pathname);
+            
+            const { data: { session }, error } = await supabaseClient.auth.getSession();
+            if (error) {
+                showError('Authentication failed. Please try again.');
+            } else if (session) {
+                window.location.href = '/dashboard.html';
+            }
+        }
+    </script>
 </body>
 </html> 

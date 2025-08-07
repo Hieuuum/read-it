@@ -1,11 +1,11 @@
-# PopCorn
+# Read-it
 
-A web application for tracking movies and TV shows, built with Node.js, Express, and Supabase.
+A web application for tracking books, built with Node.js, Express, and Supabase.
 
 ## Features
 
 - User authentication with Supabase Auth
-- Search movies and TV shows using TMDb API
+- Search movies and TV shows using Google Books API
 - Add media to your personal library
 - Track watching status and personal ratings
 - Responsive design with Tailwind CSS
@@ -28,4 +28,4 @@ A web application for tracking movies and TV shows, built with Node.js, Express,
 
 ## License
 
-This project is licensed under the MIT License. 
+This project is licensed under the MIT License.

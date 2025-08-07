@@ -15,17 +15,21 @@ app.use(express.json());
 app.use(express.static(path.join(__dirname, 'frontend')));
 
 // Public routes (no auth required)
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, 'frontend', 'index.html'));
+});
+
 app.get('/index.html', (req, res) => {
-  res.sendFile(path.join(__dirname, 'frontend', 'index.html'));
+    res.sendFile(path.join(__dirname, 'frontend', 'index.html'));
 });
 
 // Protected page routes
 app.get('/dashboard.html', checkPageAuth, (req, res) => {
-  res.sendFile(path.join(__dirname, 'frontend', 'dashboard.html'));
+    res.sendFile(path.join(__dirname, 'frontend', 'dashboard.html'));
 });
 
 app.get('/library.html', checkPageAuth, (req, res) => {
-  res.sendFile(path.join(__dirname, 'frontend', 'library.html'));
+    res.sendFile(path.join(__dirname, 'frontend', 'library.html'));
 });
 
 // Protected API routes
@@ -88,25 +92,14 @@ app.get('/api/search', checkApiAuth, async (req, res) => {
     }
 });
 
-// Default route handler
-app.get('/', (req, res) => {
-    // Check if user is authenticated
-    const { data: { session } } = supabase.auth.getSession();
-    if (session) {
-        res.redirect('/dashboard.html');
-    } else {
-        res.redirect('/index.html');
-    }
-});
-
 // Catch-all route for client-side routing
 app.get('*', (req, res) => {
     // Don't handle API routes
     if (req.url.startsWith('/api')) {
         return res.status(404).json({ error: 'Not found' });
     }
-    // Redirect to login for all other routes
-    res.redirect('/index.html');
+    // Redirect to index for all other routes
+    res.redirect('/');
 });
 
 // Start server
